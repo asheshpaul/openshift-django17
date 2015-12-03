@@ -1,14 +1,14 @@
-Development moved to https://github.com/jfmatth/openshift-django
 
-Django v1.7 on OpenShift v3.2014+
+
+Django v1.8 on OpenShift v3.2014+
 =
-This git repository helps you get up and running quickly with django v1.7 and Openshift.
+This git repository helps you get up and running quickly with django v1.8 and Openshift.
 ###Features
 * Ready to use for local development
 * Easy to push to Openshift
 * Works with  either PostgreSQL or MySQL
-* Minimal changes to default django 1.7 installation
-* Names follow the django 1.7x tutorial
+* Minimal changes to default django 1.8 installation
+* Names follow the django 1.8x tutorial
 * Uses new folder layout from Openshift March 2014 release
 * Allows for debug mode on Openshift with the help of an environment variable.
 * Use of static files is pre-configured
@@ -20,27 +20,27 @@ This git repository helps you get up and running quickly with django v1.7 and Op
 sudo gem install rhc
 rhc setup
 ```
-- Create a Python 2.7 application
+- Create a Python 3.3 application
 ```
-rhc app create django python-2.7
+rhc app create <project-name> python-3.3
 ```
 - Add the database cartridge (choose one)
 ```
-rhc add-cartridge postgresql-9.2 --app django
+rhc add-cartridge postgresql-9.2 --app <project-name>
 
 OR
 
-rhc add-cartridge mysql-5.5 --app django 
+rhc add-cartridge mysql-5.5 --app <project-name> 
 ```
 - Add this upstream repo
 ```
-cd django
-git remote add upstream -m master https://github.com/jfmatth/openshift-django17.git
+cd <project-name>
+git remote add upstream -m master https://github.com/asarkar1990/openshift-django17.git
 git pull -s recursive -X theirs upstream master
 ```
 - set the WSGI application to django's built in WSGI application (stored in the wsgi folder).
 ```
-rhc env set OPENSHIFT_PYTHON_WSGI_APPLICATION=wsgi/wsgi.py --app django
+rhc env set OPENSHIFT_PYTHON_WSGI_APPLICATION=wsgi/wsgi.py --app <project-name>
 ```
 - Push the repo upstream
 ```
