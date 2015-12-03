@@ -15,8 +15,9 @@ else:
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # adjust to turn off when on Openshift, but allow an environment variable to override on PAAS
-DEBUG = not ON_PAAS
-DEBUG = DEBUG or os.getenv("debug","false").lower() == "true"
+# DEBUG = not ON_PAAS
+# DEBUG = DEBUG or os.getenv("debug","false").lower() == "true"
+DEBUG = True
 
 if ON_PAAS and DEBUG:
     print("*** Warning - Debug mode is on ***")
@@ -24,7 +25,7 @@ if ON_PAAS and DEBUG:
 TEMPLATE_DEBUG = True
 
 if ON_PAAS:
-    ALLOWED_HOSTS = [os.environ['OPENSHIFT_APP_DNS'], socket.gethostname()]
+    ALLOWED_HOSTS = [os.environ['OPENSHIFT_APP_DNS'], socket.gethostname(), 'digitaltripura.org','www.digitaltripura.org','m.digitaltripura.org']
 else:
     ALLOWED_HOSTS = []
 
@@ -37,8 +38,17 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'crispy_forms',
+
+    #MY APPS
+    
+
 )
 
+
+CRISPY_TEMPLATE_PACK = 'bootstrap3'
+LOGIN_REDIRECT_URL = '/management'
+LOGIN_URL ='/login'
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -55,11 +65,11 @@ ROOT_URLCONF = 'mysite.urls'
 
 if ON_PAAS:
     # determine if we are on MySQL or POSTGRESQL
-    if "OPENSHIFT_POSTGRESQL_DB_USERNAME" in os.environ: 
-    
+    if "OPENSHIFT_POSTGRESQL_DB_USERNAME" in os.environ:
+
         DATABASES = {
             'default': {
-                'ENGINE': 'django.db.backends.postgresql_psycopg2',  
+                'ENGINE': 'django.db.backends.postgresql_psycopg2',
                 'NAME':     os.environ['OPENSHIFT_APP_NAME'],
                 'USER':     os.environ['OPENSHIFT_POSTGRESQL_DB_USERNAME'],
                 'PASSWORD': os.environ['OPENSHIFT_POSTGRESQL_DB_PASSWORD'],
@@ -67,9 +77,9 @@ if ON_PAAS:
                 'PORT':     os.environ['OPENSHIFT_POSTGRESQL_DB_PORT'],
             }
         }
-        
-    elif "OPENSHIFT_MYSQL_DB_USERNAME" in os.environ: 
-    
+
+    elif "OPENSHIFT_MYSQL_DB_USERNAME" in os.environ:
+
         DATABASES = {
             'default': {
                 'ENGINE': 'django.db.backends.mysql',
@@ -81,7 +91,7 @@ if ON_PAAS:
             }
         }
 
-        
+
 else:
     # stock django, local development.
     DATABASES = {
@@ -91,11 +101,23 @@ else:
         }
     }
 
+#
+# DATABASES = {
+#             'default': {
+#                 'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#                 'NAME':     'dit',
+#                 'USER':     'adminwvkd8pt',
+#                 'PASSWORD': 'xfmBvI6MpFik',
+#                 'HOST':'127.0.0.1',
+#                 'PORT':'45191',
+#             }
+#         }
+
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Kolkata'
 
 USE_I18N = True
 
@@ -117,12 +139,23 @@ STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    os.path.join(BASE_DIR,"static"),
+    os.path.join(BASE_DIR, "website/static"),
 )
 
-TEMPLATE_DIRS = (
-    # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
-    # Always use forward slashes, even on Windows.
-    # Don't forget to use absolute paths, not relative paths.
-    os.path.join(BASE_DIR, 'templates'),
-)
+TEMPLATES = [
+{
+'BACKEND': 'django.template.backends.django.DjangoTemplates',
+'DIRS': [os.path.join(BASE_DIR, 'templates')],
+'APP_DIRS': True,
+
+'OPTIONS': {
+'context_processors': [
+'django.template.context_processors.debug',
+'django.template.context_processors.request',
+'django.contrib.auth.context_processors.auth',
+'django.contrib.messages.context_processors.messages',
+'django.core.context_processors.request',
+],
+},
+},
+]
